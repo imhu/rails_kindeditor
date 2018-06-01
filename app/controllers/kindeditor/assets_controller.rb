@@ -13,7 +13,7 @@ class Kindeditor::AssetsController < ApplicationController
           logger.warn '========= Warning: the owner have not been created, "delete uploaded files automatically" will not work. =========' if defined?(logger) && @asset.owner_id == 0
           @asset.asset_type = @dir
           if @asset.save
-            render :plain => ({:error => 0, :url => @asset.asset.url}.to_json)
+            render json: ({:error => 0, :url => @asset.asset.url}.to_json)
           else
             show_error(@asset.errors.full_messages)
           end
@@ -24,7 +24,7 @@ class Kindeditor::AssetsController < ApplicationController
         begin
           uploader = "Kindeditor::#{@dir.camelize}Uploader".constantize.new
           uploader.store!(@imgFile)
-          render :plain => ({:error => 0, :url => uploader.url}.to_json)
+          render json: ({:error => 0, :url => uploader.url}.to_json)
         rescue CarrierWave::UploadError => e
           show_error(e.message)
         rescue Exception => e
@@ -116,7 +116,7 @@ class Kindeditor::AssetsController < ApplicationController
     @result[:current_url] = @current_url
     @result[:total_count] = @file_list.count
     @result[:file_list] = @file_list
-    render :plain => @result.to_json
+    render json: @result
   end
   
   private
